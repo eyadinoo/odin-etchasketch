@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Document</title>
+</head>
+<body>
+    <form action ="" id="boxForm">
+        <input type="text" name="boxInput" placeholder="How many boxes per side?">
+        <button type="submit" id="goButton">Submit</button>
+    </form>
+    
+    <div id="content">
+
+    </div>
+    <script>
+        let content = document.querySelector("#content");
+        let doneBoxes = [];
+        
+        createBoxes(16);
+        function createBoxes(createAmount) {
+            for (let n = 0; n < createAmount; n++){
+                let box = content.appendChild(document.createElement("div"));
+                box.id = `a${n}`;
+            }
+            let boxes = content.querySelectorAll("#content *");
+            boxes.forEach(one => { //adds mouseover listener that randomly colors fresh boxes and darkens touched boxes
+                one.style.minWidth = `${100/Math.sqrt(boxes.length)}%`;
+                one.addEventListener("mouseover", () => {
+                    if (doneBoxes.includes(one.id)) {
+                        let oneColors = one.style.backgroundColor.match(/\d+/g);
+                        one.style.backgroundColor = `rgb(${Number(oneColors[0])/2},${Number(oneColors[1])/2},${Number(oneColors[2])/2})`;
+                    } else {
+                        one.style.backgroundColor = `rgb(${Math.floor(Math.random()*256)},${Math.floor(Math.random()*256)},${Math.floor(Math.random()*256)})`;
+                        doneBoxes.push(one.id);
+                    }
+                })
+
+                // use array length to check box amount 
+            })
+        }
+
+
+        boxForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            let dimensions = document.querySelector("input").value;
+            if (isNaN(dimensions) || !Number.isInteger(Number(dimensions)) || dimensions < 1) alert("invalid input");
+            else if (dimensions > 100) alert ("too high");
+            else {
+                content.textContent = "";
+                doneBoxes = [];
+                createBoxes(Number(dimensions) ** 2);
+            };
+        })
+
+    </script>
+</body>
+</html>
